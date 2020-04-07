@@ -53,7 +53,9 @@ public class ZealotCounter {
   JSONObject zealotData;
   boolean isInSkyblock = false;
   private ScheduledExecutorService autoSaveExecutor;
-
+  public static boolean onNewProfile = false;
+  public static final String DEFAULT_PROFILE = "UNKNOWN_PROFILE";
+  
   static boolean isInteger(String s) {
     return isInteger(s, 10);
   }
@@ -97,6 +99,17 @@ public class ZealotCounter {
     if (!lastSetup.equals("")) {
       saveSetup(lastSetup.split(" ")[0], lastSetup.split(" ")[1], zealotCount, summoningEyes,
           sinceLastEye);
+    }
+    //if we are not on a newly created profile and that profile is not in our database then it
+    //is the real name of the default profile
+    if(!zealotData.getJSONObject("player").isNull(uuid) &&
+       !zealotData.getJSONObject("player").getJSONObject(uuid).isNull(DEFAULT_PROFILE) &&
+       zealotData.getJSONObject("player").getJSONObject(uuid).isNull(profile) &&
+       !onNewProfile) {
+    	//replace placeholder profile name with real one
+    	zealotData.getJSONObject("player").getJSONObject(uuid).put(profile, 
+    			zealotData.getJSONObject("player").getJSONObject(uuid).getJSONObject(DEFAULT_PROFILE));
+    	zealotData.getJSONObject("player").getJSONObject(uuid).remove(DEFAULT_PROFILE);
     }
     lastSetup = currentSetup;
     if (!zealotData.getJSONObject("player").isNull(uuid)

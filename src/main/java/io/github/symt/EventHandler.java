@@ -89,6 +89,18 @@ public class EventHandler {
           Minecraft.getMinecraft().thePlayer.getUniqueID() + " " + stripString(
               e.message.getUnformattedText())
               .split(" ")[5];
+    } else if (stripString(e.message.getUnformattedText())
+    	.startsWith("Your profile was changed to: ")) { 
+    	//message is sent when a profile is switched to and created
+    	zealotCounter.currentSetup = 
+    		Minecraft.getMinecraft().thePlayer.getUniqueID() + " " + stripString(
+    			e.message.getUnformattedText())
+    			.split(" ")[5];
+    } else if (stripString(e.message.getUnformattedText())
+    		//message is only sent when a profile has begun creation
+    		//if the profile creation fails due to lag this might break things
+    	.startsWith("Making a little bit of room for your new profile")) { 
+    	ZealotCounter.onNewProfile = true;
     }
   }
 
